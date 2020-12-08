@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import GameBoard from "./components/gameBoard";
-import { getCard } from "./services/cardService";
-import { checkIfGameOver, handleStay } from "./services/gameService";
+import { getCard, resetCardsDrawn } from "./services/cardService";
+import { checkIfGameOver, getUpdatedValues } from "./services/gameService";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
 
 class App extends Component {
@@ -12,59 +12,109 @@ class App extends Component {
     dealerTotal: 0,
     playerHasAce: false,
     dealerHasAce: false,
+    gameOver: "",
     draw: false,
-    playerStayed: false,
+    playerStanding: false,
     winner: "",
   };
 
-  //Handle drawing a card for the player and the dealer if the dealer can draw
+  //Handle drawing a card for the player and the dealer
   handleGetCard = () => {
-    const { dealerTotal } = this.state;
+    let {
+      playerTotal,
+      playerCards,
+      playerHasAce,
+      playerStanding,
+      dealerTotal,
+      dealerCards,
+      dealerHasAce,
+    } = this.state;
+
+    //Add a card to the dealer's hand if they have a total less than 17
     if (dealerTotal < 17) {
-      this.getDealerCard();
+      let dealerCard = getCard();
+
+      const {
+        newTotal: newDealerTotal,
+        newCards: newDealerCards,
+        hasAce,
+      } = getUpdatedValues(dealerTotal, dealerCard, dealerCards, dealerHasAce);
+
+      dealerCards = newDealerCards;
+      dealerTotal = newDealerTotal;
+      dealerHasAce = hasAce;
     }
 
-    this.getPlayerCard();
-  };
+    //Add a card to the player's hand unless they stood
+    if (playerStanding === false) {
+      let playerCard = getCard();
+      const {
+        newTotal: newPlayerTotal,
+        newCards: newPlayerCards,
+        hasAce,
+      } = getUpdatedValues(playerTotal, playerCard, playerCards, playerHasAce);
 
-  //Add a card to the player's hand and update values accordingly
-  getPlayerCard = () => {
-    const { playerTotal, playerCards, playerHasAce } = this.state;
-    let playerCard = getCard();
-
-    //Check to see if card is an ace and if it should have a value of 1 or 11
-    if (playerCard.value === 11 && playerTotal > 10) {
-      this.setState({ playerHasAce: false });
-      playerCard.value = 1;
-    } else if (playerCard.value === 11 && playerTotal <= 10) {
-      this.setState({ playerHasAce: true });
+      playerCards = newPlayerCards;
+      playerTotal = newPlayerTotal;
+      playerHasAce = hasAce;
     }
 
-    const newPlayerCards = [playerCard, ...playerCards];
-    let newPlayerTotal = playerTotal + playerCard.value;
+    //Check to see if the new values will end the game
+    const gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
 
-    //Check to see if the player has bust and if they have an ace that needs to be changed
-    //to have a value of 1 to prevent the bust
-    if (newPlayerTotal > 21 && playerHasAce) {
-      this.setState({ playerHasAce: false });
-      newPlayerTotal -= 10;
+    //Update the state variables with the new values
+    this.setState({
+      playerTotal,
+      playerCards,
+      playerHasAce,
+      playerStanding,
+      dealerTotal,
+      dealerCards,
+      dealerHasAce,
+      gameOver,
+    });
+  };
+
+  //Once the player has stood, have the dealer draw cards until  16 <= dealer's total < 21
+  handlePlayerStand = () => {
+    let {
+      dealerTotal,
+      dealerCards,
+      dealerHasAce,
+      playerTotal,
+      playerStanding,
+    } = this.state;
+    playerStanding = true;
+
+    let gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    if (gameOver) {
+      return this.setState({ gameOver, dealerCards, dealerTotal });
     }
 
-    this.setState({ playerCards: newPlayerCards, playerTotal: newPlayerTotal });
-  };
+    while (dealerTotal < 16) {
+      let dealerCard = getCard();
 
-  //Add a card to the dealer's hand and update values accordingly
-  getDealerCard = () => {
-    const dealerCard = getCard();
-    const dealerCards = [dealerCard, ...this.state.dealerCards];
-    const dealerTotal = this.state.dealerTotal + dealerCard.value;
-    this.setState({ dealerCards, dealerTotal });
-  };
+      const {
+        newTotal: newDealerTotal,
+        newCards: newDealerCards,
+        hasAce,
+      } = getUpdatedValues(dealerTotal, dealerCard, dealerCards, dealerHasAce);
 
-  //Pass state values to the gameService handleStay function
-  onStay = () => {
-    const { dealerTotal, playerTotal } = this.state;
-    this.setState(handleStay(dealerTotal, playerTotal, this.getDealerCard));
+      dealerCards = newDealerCards;
+      dealerTotal = newDealerTotal;
+      dealerHasAce = hasAce;
+    }
+
+    gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    if (gameOver) {
+      return this.setState({ gameOver, dealerTotal, dealerCards });
+    }
+    this.setState({
+      dealerTotal,
+      dealerCards,
+      dealerHasAce,
+      playerStanding: true,
+    });
   };
 
   //Reset the game back to it's initial state
@@ -74,31 +124,35 @@ class App extends Component {
       dealerCards: [],
       playerTotal: 0,
       dealerTotal: 0,
+      playerHasAce: false,
+      dealerHasAce: false,
       draw: false,
-      playerStayed: false,
+      playerStanding: false,
       winner: "",
+      gameOver: "",
     });
+    resetCardsDrawn();
   };
 
   render() {
-    const { dealerTotal, playerTotal, winner, playerStayed } = this.state;
-    const gameOver = checkIfGameOver(
-      dealerTotal,
+    const {
       playerTotal,
-      winner,
-      playerStayed,
-      this.getDealerCard
-    );
+      dealerTotal,
+      gameOver,
+      playerCards,
+      dealerCards,
+    } = this.state;
 
     return (
       <GameBoard
-        playerCards={this.state.playerCards}
-        dealerCards={this.state.dealerCards}
-        playerTotal={this.state.playerTotal}
+        playerCards={playerCards}
+        dealerCards={dealerCards}
+        playerTotal={playerTotal}
+        dealerTotal={dealerTotal}
         gameOver={gameOver}
         handleGetCard={this.handleGetCard}
         handlePlayAgain={this.handlePlayAgain}
-        handleStay={this.onStay}
+        handlePlayerStand={this.handlePlayerStand}
       />
     );
   }

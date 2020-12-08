@@ -1,15 +1,15 @@
 import React from "react";
 
-const GameControls = ({ onGet, onStay, onPlayAgain, gameOver }) => {
+const GameControls = ({ onGet, onStand, onPlayAgain, gameOver }) => {
   return (
     <React.Fragment>
-      {gameOver === undefined ? (
+      {gameOver === "" ? (
         <div>
           <button className="btn btn-success m-2" onClick={() => onGet()}>
             Hit Me!
           </button>
-          <button className="btn btn-danger" onClick={() => onStay()}>
-            Stay
+          <button className="btn btn-danger" onClick={() => onStand()}>
+            Stand
           </button>{" "}
         </div>
       ) : (

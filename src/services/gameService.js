@@ -1,16 +1,5 @@
 //Checks to see if the dealer or player has won or if the game is a draw
-export function checkIfGameOver(
-  dealerTotal,
-  playerTotal,
-  winner,
-  playerStayed,
-  getDealerCard
-) {
-  //Check to see if handleStay set the winner property
-  if (winner !== "") {
-    return winner;
-  }
-
+export function checkIfGameOver(dealerTotal, playerTotal, playerStanding) {
   //Check if player and dealer both have blackjack
   if (
     (dealerTotal > 21 && playerTotal > 21) ||
@@ -33,34 +22,35 @@ export function checkIfGameOver(
     return "Player";
   }
 
-  //Check to see if player stayed and dealer is up
-  if (playerStayed && dealerTotal > playerTotal) {
+  //Check to see if player stood and dealer is up
+  if (playerStanding && dealerTotal > playerTotal) {
     return "Dealer";
-  } else if (playerStayed && dealerTotal < playerTotal) {
-    getDealerCard();
   }
+
+  //Check to see if the player won because the dealer was forced to stand
+  if (playerStanding && dealerTotal >= 16 && playerTotal > dealerTotal) {
+    return "Player";
+  }
+
+  //Check to see if the player and dealer stood to a draw
+  if (playerStanding && dealerTotal >= 16 && playerTotal === dealerTotal) {
+    return "draw";
+  }
+
+  return "";
 }
 
-//Check to see if the player choosing to stay has ended the game or
-//if the dealer should draw again
-export function handleStay(dealerTotal, playerTotal, getDealerCard) {
-  if (dealerTotal > playerTotal) {
-    return { winner: "Dealer" };
+//Gets the values that should be set for the hand that was passed in
+export function getUpdatedValues(total, newCard, cards, hasAce) {
+  const newCards = [newCard, ...cards];
+  let newTotal = total + newCard.value;
+
+  if ((newCard.value === 11 && total > 10) || (newTotal > 21 && hasAce)) {
+    hasAce = false;
+    newTotal -= 10;
+  } else if (newCard.value === 11 && total <= 10) {
+    hasAce = true;
   }
 
-  if (
-    (dealerTotal < playerTotal && dealerTotal <= 16) ||
-    (dealerTotal === playerTotal && dealerTotal <= 16)
-  ) {
-    getDealerCard();
-    return { playerStayed: true };
-  }
-
-  if (dealerTotal === playerTotal && dealerTotal >= 16) {
-    return { winner: "draw" };
-  }
-
-  if (dealerTotal < playerTotal && dealerTotal >= 16) {
-    return { winner: "Player" };
-  }
+  return { newTotal, newCards, hasAce };
 }
