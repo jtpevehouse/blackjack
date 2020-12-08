@@ -116,12 +116,12 @@ class App extends Component {
     } = this.state;
     playerStanding = true;
 
-    while (dealerTotal < 16) {
-      let gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
-      if (gameOver) {
-        return this.setState({ gameOver, dealerCards, dealerTotal });
-      }
+    let gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    if (gameOver) {
+      return this.setState({ gameOver, dealerCards, dealerTotal });
+    }
 
+    while (dealerTotal < 16) {
       let dealerCard = getCard();
 
       const {
@@ -140,7 +140,7 @@ class App extends Component {
       dealerHasAce = hasAce;
     }
 
-    let gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
     if (gameOver) {
       return this.setState({ gameOver, dealerTotal, dealerCards });
     }
@@ -168,13 +168,20 @@ class App extends Component {
   };
 
   render() {
-    const { playerTotal, gameOver, playerCards, dealerCards } = this.state;
+    const {
+      playerTotal,
+      dealerTotal,
+      gameOver,
+      playerCards,
+      dealerCards,
+    } = this.state;
 
     return (
       <GameBoard
         playerCards={playerCards}
         dealerCards={dealerCards}
         playerTotal={playerTotal}
+        dealerTotal={dealerTotal}
         gameOver={gameOver}
         handleGetCard={this.handleGetCard}
         handlePlayAgain={this.handlePlayAgain}

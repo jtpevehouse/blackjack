@@ -10,6 +10,7 @@ class GameBoard extends Component {
       playerCards,
       dealerCards,
       playerTotal,
+      dealerTotal,
       handleGetCard,
       handlePlayerStand,
       handlePlayAgain,
@@ -25,7 +26,7 @@ class GameBoard extends Component {
             <PlayerHand cards={playerCards} total={playerTotal} />
           </div>
           <div className="col">
-            <h3>Dealer</h3>
+            <h3>Dealer: {dealerTotal}</h3>
             <DealerHand cards={dealerCards} />
           </div>
         </div>

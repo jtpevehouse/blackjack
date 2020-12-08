@@ -27,5 +27,15 @@ export function checkIfGameOver(dealerTotal, playerTotal, playerStanding) {
     return "Dealer";
   }
 
+  //Check to see if the player won because the dealer was forced to stand
+  if (playerStanding && dealerTotal >= 16 && playerTotal > dealerTotal) {
+    return "Player";
+  }
+
+  //Check to see if the player and dealer stood to a draw
+  if (playerStanding && dealerTotal >= 16 && playerTotal === dealerTotal) {
+    return "draw";
+  }
+
   return "";
 }
