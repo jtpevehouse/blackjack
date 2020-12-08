@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import GameBoard from "./components/gameBoard";
 import { getCard, resetCardsDrawn } from "./services/cardService";
-import { checkIfGameOver } from "./services/gameService";
+import { checkIfGameOver, getUpdatedValues } from "./services/gameService";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
 
 class App extends Component {
@@ -38,12 +38,7 @@ class App extends Component {
         newTotal: newDealerTotal,
         newCards: newDealerCards,
         hasAce,
-      } = this.getUpdatedValues(
-        dealerTotal,
-        dealerCard,
-        dealerCards,
-        dealerHasAce
-      );
+      } = getUpdatedValues(dealerTotal, dealerCard, dealerCards, dealerHasAce);
 
       dealerCards = newDealerCards;
       dealerTotal = newDealerTotal;
@@ -57,12 +52,7 @@ class App extends Component {
         newTotal: newPlayerTotal,
         newCards: newPlayerCards,
         hasAce,
-      } = this.getUpdatedValues(
-        playerTotal,
-        playerCard,
-        playerCards,
-        playerHasAce
-      );
+      } = getUpdatedValues(playerTotal, playerCard, playerCards, playerHasAce);
 
       playerCards = newPlayerCards;
       playerTotal = newPlayerTotal;
@@ -83,26 +73,6 @@ class App extends Component {
       dealerHasAce,
       gameOver,
     });
-  };
-
-  //Gets the values that should be set for the hand that was passed in
-  getUpdatedValues = (total, newCard, cards, hasAce) => {
-    if (newCard.value === 11 && total > 10) {
-      hasAce = false;
-      newCard.value = 1;
-    } else if (newCard.value === 11 && total <= 10) {
-      hasAce = true;
-    }
-
-    const newCards = [newCard, ...cards];
-    let newTotal = total + newCard.value;
-
-    if (newTotal > 21 && hasAce) {
-      hasAce = false;
-      newTotal -= 10;
-    }
-
-    return { newTotal, newCards, hasAce };
   };
 
   //Once the player has stood, have the dealer draw cards until  16 <= dealer's total < 21
@@ -128,12 +98,7 @@ class App extends Component {
         newTotal: newDealerTotal,
         newCards: newDealerCards,
         hasAce,
-      } = this.getUpdatedValues(
-        dealerTotal,
-        dealerCard,
-        dealerCards,
-        dealerHasAce
-      );
+      } = getUpdatedValues(dealerTotal, dealerCard, dealerCards, dealerHasAce);
 
       dealerCards = newDealerCards;
       dealerTotal = newDealerTotal;
@@ -159,6 +124,8 @@ class App extends Component {
       dealerCards: [],
       playerTotal: 0,
       dealerTotal: 0,
+      playerHasAce: false,
+      dealerHasAce: false,
       draw: false,
       playerStanding: false,
       winner: "",

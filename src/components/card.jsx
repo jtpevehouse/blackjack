@@ -6,9 +6,9 @@ const Card = (props) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col">
-          {card.face} of {card.suit}
-        </div>
+        <div className="col">{card.face}</div>
+        <div className="col">{card.suit}</div>
+        <div className="col">({card.value})</div>
       </div>
     </div>
   );

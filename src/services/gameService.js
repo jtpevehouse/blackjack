@@ -39,3 +39,18 @@ export function checkIfGameOver(dealerTotal, playerTotal, playerStanding) {
 
   return "";
 }
+
+//Gets the values that should be set for the hand that was passed in
+export function getUpdatedValues(total, newCard, cards, hasAce) {
+  const newCards = [newCard, ...cards];
+  let newTotal = total + newCard.value;
+
+  if ((newCard.value === 11 && total > 10) || (newTotal > 21 && hasAce)) {
+    hasAce = false;
+    newTotal -= 10;
+  } else if (newCard.value === 11 && total <= 10) {
+    hasAce = true;
+  }
+
+  return { newTotal, newCards, hasAce };
+}
