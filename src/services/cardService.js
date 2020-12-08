@@ -1,4 +1,4 @@
-const cards = new Array(52);
+let cardsDrawn = new Array(52);
 const suits = ["spades", "hearts", "clubs", "diamonds"];
 const namedCards = ["King", "Queen", "Jack"];
 
@@ -29,13 +29,13 @@ export function getCard() {
   setCardFace(card, faceValue);
   setCardValue(card, faceValue);
 
-  cards[cardIndex - 1] = cardIndex;
+  cardsDrawn[cardIndex - 1] = cardIndex;
   return card;
 }
 
 //Checks to see if the card that's been generated has already been generated
 function checkIfCardExists(cardIndex) {
-  if (cards[cardIndex - 1] !== undefined) {
+  if (cardsDrawn[cardIndex - 1] !== undefined) {
     return true;
   } else return false;
 }
@@ -43,7 +43,7 @@ function checkIfCardExists(cardIndex) {
 //Checks to see if you can move the card up one suit instead of making a new card
 function checkIfOneSuitUpExists(cardIndex) {
   const oneSuitUp = (cardIndex += 13);
-  if (cards[oneSuitUp - 1]) {
+  if (cardsDrawn[oneSuitUp - 1]) {
     return true;
   } else return false;
 }
@@ -66,4 +66,9 @@ function setCardValue(card, faceValue) {
   } else if (faceValue > 10) {
     card.value = 10;
   } else card.value = faceValue;
+}
+
+//Clears all data from the cards array
+export function resetCardsDrawn() {
+  cardsDrawn = new Array(52);
 }

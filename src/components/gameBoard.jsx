@@ -11,8 +11,8 @@ class GameBoard extends Component {
       dealerCards,
       playerTotal,
       handleGetCard,
+      handlePlayerStand,
       handlePlayAgain,
-      handleStay,
       gameOver,
     } = this.props;
 
@@ -31,7 +31,7 @@ class GameBoard extends Component {
         </div>
         <GameControls
           onGet={handleGetCard}
-          onStay={handleStay}
+          onStand={handlePlayerStand}
           onPlayAgain={handlePlayAgain}
           gameOver={gameOver}
         />
