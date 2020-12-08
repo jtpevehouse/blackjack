@@ -10,6 +10,8 @@ class App extends Component {
     dealerCards: [],
     playerTotal: 0,
     dealerTotal: 0,
+    playerHasAce: false,
+    dealerHasAce: false,
     draw: false,
     playerStayed: false,
     winner: "",
@@ -27,11 +29,28 @@ class App extends Component {
 
   //Add a card to the player's hand and update values accordingly
   getPlayerCard = () => {
-    const playerCard = getCard();
-    const playerCards = [playerCard, ...this.state.playerCards];
-    const playerTotal = this.state.playerTotal + playerCard.value;
+    const { playerTotal, playerCards, playerHasAce } = this.state;
+    let playerCard = getCard();
 
-    this.setState({ playerCards, playerTotal });
+    //Check to see if card is an ace and if it should have a value of 1 or 11
+    if (playerCard.value === 11 && playerTotal > 10) {
+      this.setState({ playerHasAce: false });
+      playerCard.value = 1;
+    } else if (playerCard.value === 11 && playerTotal <= 10) {
+      this.setState({ playerHasAce: true });
+    }
+
+    const newPlayerCards = [playerCard, ...playerCards];
+    let newPlayerTotal = playerTotal + playerCard.value;
+
+    //Check to see if the player has bust and if they have an ace that needs to be changed
+    //to have a value of 1 to prevent the bust
+    if (newPlayerTotal > 21 && playerHasAce) {
+      this.setState({ playerHasAce: false });
+      newPlayerTotal -= 10;
+    }
+
+    this.setState({ playerCards: newPlayerCards, playerTotal: newPlayerTotal });
   };
 
   //Add a card to the dealer's hand and update values accordingly

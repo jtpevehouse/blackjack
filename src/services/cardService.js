@@ -20,7 +20,9 @@ export function getCard() {
       suitIndex === 3 ? (suitIndex = 0) : suitIndex++;
       cardIndex += 13;
       card.index = cardIndex;
-    } else return getCard();
+    } else {
+      return getCard();
+    }
   } else card.index = cardIndex;
 
   card.suit = suits[suitIndex];
@@ -39,8 +41,8 @@ function checkIfCardExists(cardIndex) {
 }
 
 //Checks to see if you can move the card up one suit instead of making a new card
-function checkIfOneSuitUpExists(cardValue) {
-  const oneSuitUp = (cardValue += 13);
+function checkIfOneSuitUpExists(cardIndex) {
+  const oneSuitUp = (cardIndex += 13);
   if (cards[oneSuitUp - 1]) {
     return true;
   } else return false;
@@ -59,7 +61,9 @@ function setCardFace(card, faceValue) {
 
 //Sets the value of the card in the hand
 function setCardValue(card, faceValue) {
-  if (faceValue > 10) {
+  if (faceValue === 1) {
+    card.value = 11;
+  } else if (faceValue > 10) {
     card.value = 10;
   } else card.value = faceValue;
 }
