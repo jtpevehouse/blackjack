@@ -55,10 +55,28 @@ class App extends Component {
 
   //Add a card to the dealer's hand and update values accordingly
   getDealerCard = () => {
-    const dealerCard = getCard();
-    const dealerCards = [dealerCard, ...this.state.dealerCards];
-    const dealerTotal = this.state.dealerTotal + dealerCard.value;
-    this.setState({ dealerCards, dealerTotal });
+    const { dealerTotal, dealerCards, dealerHasAce } = this.state;
+    let dealerCard = getCard();
+
+    //Check to see if card is an ace and if it should have a value of 1 or 11
+    if (dealerCard.value === 11 && dealerTotal > 10) {
+      this.setState({ dealerHasAce: false });
+      dealerCard.value = 1;
+    } else if (dealerCard.value === 11 && dealerTotal <= 10) {
+      this.setState({ dealerHasAce: true });
+    }
+
+    const newDealerCards = [dealerCard, ...dealerCards];
+    let newDealerTotal = this.state.dealerTotal + dealerCard.value;
+
+    //Check to see if the player has bust and if they have an ace that needs to be changed
+    //to have a value of 1 to prevent the bust
+    if (newDealerTotal > 21 && dealerHasAce) {
+      this.setState({ dealerHasAce: false });
+      newDealerTotal -= 10;
+    }
+
+    this.setState({ dealerCards: newDealerCards, dealerTotal: newDealerTotal });
   };
 
   //Pass state values to the gameService handleStay function
