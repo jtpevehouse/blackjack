@@ -1,5 +1,12 @@
-.playing-card {
+.playing-card-image {
   width: 130px;
   height: 200px;
-  margin: 10px;
+}
+
+.playing-card {
+  background-color: transparent;
+  width: 130px;
+  height: 200px;
+  margin-top: 10px;
+  perspective: 1000px;
 }

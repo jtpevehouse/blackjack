@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import PlayerHand from "./playerHand";
-import DealerHand from "./dealerHand";
+import Hand from "./hand";
 import GameControls from "./gameControls";
 import GameHeader from "./gameHeader";
+import "./gameBoard.css";
 
 class GameBoard extends Component {
   render() {
@@ -18,18 +18,20 @@ class GameBoard extends Component {
     } = this.props;
 
     return (
-      <div className="container">
+      <div className="game-board">
         <GameHeader gameOver={gameOver} />
-        <div className="row">
-          <div className="col">
-            <h3>Player: {playerTotal}</h3>
-            <PlayerHand cards={playerCards} total={playerTotal} />
-          </div>
-          <div className="col">
-            <h3>Dealer: {dealerTotal}</h3>
-            <DealerHand cards={dealerCards} />
-          </div>
-        </div>
+        <Hand
+          cards={dealerCards}
+          total={dealerTotal}
+          gameOver={gameOver}
+          owner="dealer"
+        />
+        <Hand
+          cards={playerCards}
+          total={playerTotal}
+          gameOver={gameOver}
+          owner="player"
+        />
         <GameControls
           onGet={handleGetCard}
           onStand={handlePlayerStand}
