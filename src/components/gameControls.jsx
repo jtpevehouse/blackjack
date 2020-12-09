@@ -1,8 +1,9 @@
 import React from "react";
+import "./gameControls.css";
 
 const GameControls = ({ onGet, onStand, onPlayAgain, gameOver }) => {
   return (
-    <React.Fragment>
+    <div className="controls">
       {gameOver === "" ? (
         <div>
           <button className="btn btn-success m-2" onClick={() => onGet()}>
@@ -17,7 +18,7 @@ const GameControls = ({ onGet, onStand, onPlayAgain, gameOver }) => {
           Play Again
         </button>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

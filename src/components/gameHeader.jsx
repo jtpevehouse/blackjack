@@ -1,14 +1,15 @@
 import React from "react";
+import "./gameHeader.css";
 
 const GameHeader = ({ gameOver }) => {
   return (
-    <React.Fragment>
+    <div className="game-header">
       {gameOver ? (
         <h1>{gameOver === "draw" ? "Draw!" : `${gameOver} Won!`}</h1>
       ) : (
         <h1>Pevehouse Blackjack</h1>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 
