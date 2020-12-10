@@ -5,16 +5,28 @@ class Card extends Component {
   state = { faceUp: false };
 
   render() {
-    const { data: card, owner, gameOver, indexInHand } = this.props;
+    const {
+      data: card,
+      owner,
+      gameOver,
+      indexInHand,
+      totalCardCount,
+    } = this.props;
 
     const faceId =
       typeof card.face === "string" ? card.face.charAt(0) : card.face;
     const suitId = card.suit.charAt(0).toUpperCase();
 
-    const cardDisplayUrl =
-      owner === "dealer" && gameOver === "" && indexInHand !== 0
-        ? `${window.location.origin}/img/cards/red_back.png`
-        : `${window.location.origin}/img/cards/${faceId}${suitId}.png`;
+    let cardDisplayUrl = `${window.location.origin}/img/cards/${faceId}${suitId}.png`;
+
+    if (
+      owner === "dealer" &&
+      totalCardCount > 1 &&
+      indexInHand !== totalCardCount - 1 &&
+      gameOver === ""
+    ) {
+      cardDisplayUrl = `${window.location.origin}/img/cards/red_back.png`;
+    }
 
     return (
       <div className="playing-card">
