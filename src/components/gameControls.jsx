@@ -4,27 +4,27 @@ import "./gameControls.css";
 const GameControls = ({ onGet, onStand, onPlayAgain, cardCount, winner }) => {
   let controlsToRender = (
     <div>
-      <button className="btn btn-success m-2" onClick={() => onGet()}>
-        Hit Me!
+      <button className="btn btn-primary" onClick={() => onGet()}>
+        <h4>Hit Me!</h4>
       </button>
       <button className="btn btn-danger" onClick={() => onStand()}>
-        Stand
+        <h4>Stand</h4>
       </button>
     </div>
   );
 
   if (winner !== "") {
     controlsToRender = (
-      <button className="btn btn-success m-2" onClick={() => onPlayAgain()}>
-        Play Again
+      <button className="btn btn-primary" onClick={() => onPlayAgain()}>
+        <h4>Play Again</h4>
       </button>
     );
   }
 
   if (cardCount === 0) {
     controlsToRender = (
-      <button className="btn btn-success m-2" onClick={() => onGet()}>
-        Start Game
+      <button className="btn btn-primary" onClick={() => onGet()}>
+        <h4>Start Game</h4>
       </button>
     );
   }
