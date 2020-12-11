@@ -8,7 +8,7 @@ class Card extends Component {
     const {
       data: card,
       owner,
-      gameOver,
+      winner,
       indexInHand,
       totalCardCount,
     } = this.props;
@@ -23,7 +23,7 @@ class Card extends Component {
       owner === "Dealer" &&
       totalCardCount > 1 &&
       indexInHand !== totalCardCount - 1 &&
-      gameOver === ""
+      winner === ""
     ) {
       cardDisplayUrl = `${window.location.origin}/img/cards/red_back.png`;
     }
