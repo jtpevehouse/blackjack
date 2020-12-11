@@ -4,6 +4,8 @@ import GameControls from "./gameControls";
 import GameHeader from "./gameHeader";
 import { getCard, resetCardsDrawn } from "../services/cardService";
 import { checkIfGameOver, getUpdatedValues } from "../services/gameService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./gameBoard.css";
 
 class GameBoard extends Component {
@@ -15,15 +17,33 @@ class GameBoard extends Component {
     playerHasAce: false,
     dealerHasAce: false,
     gameOver: "",
-    draw: false,
     playerStanding: false,
     winner: "",
   };
 
   componentDidUpdate() {
+    const { dealerCards, gameOver } = this.state;
+
     //If this is the start of the game, draw an extra card
-    if (this.state.dealerCards.length === 1) {
+    if (dealerCards.length === 1) {
       this.handleGetCard();
+    }
+
+    //Display a notification if the game has ended
+    let toastProps = {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+    };
+
+    if (gameOver !== "" && gameOver !== "draw") {
+      toast.info(`${gameOver} won!`, toastProps);
+    } else if (gameOver !== "" && gameOver === "draw") {
+      toast.info("It was a draw!", toastProps);
     }
   }
 
@@ -135,7 +155,6 @@ class GameBoard extends Component {
       dealerTotal: 0,
       playerHasAce: false,
       dealerHasAce: false,
-      draw: false,
       playerStanding: false,
       winner: "",
       gameOver: "",
@@ -154,18 +173,19 @@ class GameBoard extends Component {
 
     return (
       <div className="game-board">
+        <ToastContainer />
         <GameHeader gameOver={gameOver} />
         <Player
           cards={dealerCards}
           total={dealerTotal}
           gameOver={gameOver}
-          owner="dealer"
+          owner="Dealer"
         />
         <Player
           cards={playerCards}
           total={playerTotal}
           gameOver={gameOver}
-          owner="player"
+          owner="Player"
         />
         <GameControls
           onGet={this.handleGetCard}

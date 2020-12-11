@@ -20,7 +20,7 @@ class Card extends Component {
     let cardDisplayUrl = `${window.location.origin}/img/cards/${faceId}${suitId}.png`;
 
     if (
-      owner === "dealer" &&
+      owner === "Dealer" &&
       totalCardCount > 1 &&
       indexInHand !== totalCardCount - 1 &&
       gameOver === ""
