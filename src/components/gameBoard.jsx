@@ -5,7 +5,7 @@ import GameHeader from "./gameHeader";
 import { getCard, resetCardsDrawn } from "../services/cardService";
 import { checkIfGameOver, getUpdatedValues } from "../services/gameService";
 import { ToastContainer, toast } from "react-toastify";
-import { DEALER_SOFT_CAP, INITIAL_GAME_STATE } from "../config.json";
+import { DEALER_SOFT_CAP } from "../config.json";
 import "react-toastify/dist/ReactToastify.css";
 import "./gameBoard.css";
 
@@ -17,8 +17,8 @@ class GameBoard extends Component {
     dealerTotal: 0,
     playerHasAce: false,
     dealerHasAce: false,
-    winner: "",
     playerStanding: false,
+    winner: "",
   };
 
   componentDidUpdate() {
@@ -59,8 +59,8 @@ class GameBoard extends Component {
       dealerHasAce,
     } = this.state;
 
-    //Add a card to the dealer's hand if they have a total less than 17
-    if (dealerTotal < 17) {
+    //Add a card to the dealer's hand if they have a total <= 17
+    if (dealerTotal <= DEALER_SOFT_CAP) {
       let dealerCard = getCard();
 
       const {
@@ -148,7 +148,16 @@ class GameBoard extends Component {
 
   //Reset the game back to it's initial state
   handlePlayAgain = () => {
-    this.setState(INITIAL_GAME_STATE);
+    this.setState({
+      playerCards: [],
+      dealerCards: [],
+      playerTotal: 0,
+      dealerTotal: 0,
+      playerHasAce: false,
+      dealerHasAce: false,
+      playerStanding: false,
+      winner: "",
+    });
     resetCardsDrawn();
   };
 
