@@ -20,6 +20,13 @@ class GameBoard extends Component {
     winner: "",
   };
 
+  componentDidUpdate() {
+    //If this is the start of the game, draw an extra card
+    if (this.state.dealerCards.length === 1) {
+      this.handleGetCard();
+    }
+  }
+
   //Handle drawing a card for the player and the dealer
   handleGetCard = () => {
     let {
@@ -164,6 +171,7 @@ class GameBoard extends Component {
           onGet={this.handleGetCard}
           onStand={this.handlePlayerStand}
           onPlayAgain={this.handlePlayAgain}
+          cardCount={dealerCards.length}
           gameOver={gameOver}
         />
       </div>
