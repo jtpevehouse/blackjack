@@ -7,7 +7,7 @@ class Player extends Component {
     const { cards, owner, total, gameOver } = this.props;
 
     const playerHeader =
-      owner === "dealer" && gameOver === "" ? owner : `${owner}: ${total}`;
+      owner === "Dealer" && gameOver === "" ? owner : `${owner}: ${total}`;
 
     return (
       <div className="player">
