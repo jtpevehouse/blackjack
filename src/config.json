@@ -1,14 +1,4 @@
 {
     "DEALER_SOFT_CAP":16,
-    "HARD_CAP": 21,
-    "INITIAL_GAME_STATE": {
-        "playerCards": [],
-        "dealerCards": [],
-        "playerTotal": 0,
-        "dealerTotal": 0,
-        "playerHasAce": false,
-        "dealerHasAce": false,
-        "playerStanding": false,
-        "winner": ""
-      }
+    "HARD_CAP": 21
 }
