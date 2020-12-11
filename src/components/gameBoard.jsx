@@ -5,6 +5,7 @@ import GameHeader from "./gameHeader";
 import { getCard, resetCardsDrawn } from "../services/cardService";
 import { checkIfGameOver, getUpdatedValues } from "../services/gameService";
 import { ToastContainer, toast } from "react-toastify";
+import { DEALER_SOFT_CAP, INITIAL_GAME_STATE } from "../config.json";
 import "react-toastify/dist/ReactToastify.css";
 import "./gameBoard.css";
 
@@ -16,13 +17,12 @@ class GameBoard extends Component {
     dealerTotal: 0,
     playerHasAce: false,
     dealerHasAce: false,
-    gameOver: "",
-    playerStanding: false,
     winner: "",
+    playerStanding: false,
   };
 
   componentDidUpdate() {
-    const { dealerCards, gameOver } = this.state;
+    const { dealerCards, winner } = this.state;
 
     //If this is the start of the game, draw an extra card
     if (dealerCards.length === 1) {
@@ -32,7 +32,7 @@ class GameBoard extends Component {
     //Display a notification if the game has ended
     let toastProps = {
       position: "top-right",
-      autoClose: 1500,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -40,9 +40,9 @@ class GameBoard extends Component {
       progress: undefined,
     };
 
-    if (gameOver !== "" && gameOver !== "draw") {
-      toast.info(`${gameOver} won!`, toastProps);
-    } else if (gameOver !== "" && gameOver === "draw") {
+    if (winner !== "" && winner !== "draw") {
+      toast.info(`${winner} won!`, toastProps);
+    } else if (winner !== "" && winner === "draw") {
       toast.info("It was a draw!", toastProps);
     }
   }
@@ -89,7 +89,7 @@ class GameBoard extends Component {
     }
 
     //Check to see if the new values will end the game
-    const gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    const winner = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
 
     //Update the state variables with the new values
     this.setState({
@@ -100,7 +100,7 @@ class GameBoard extends Component {
       dealerTotal,
       dealerCards,
       dealerHasAce,
-      gameOver,
+      winner,
     });
   };
 
@@ -115,12 +115,12 @@ class GameBoard extends Component {
     } = this.state;
     playerStanding = true;
 
-    let gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
-    if (gameOver) {
-      return this.setState({ gameOver, dealerCards, dealerTotal });
+    let winner = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    if (winner) {
+      return this.setState({ winner, dealerCards, dealerTotal });
     }
 
-    while (dealerTotal < 16 && dealerTotal <= playerTotal) {
+    while (dealerTotal < DEALER_SOFT_CAP && dealerTotal <= playerTotal) {
       let dealerCard = getCard();
 
       const {
@@ -134,9 +134,9 @@ class GameBoard extends Component {
       dealerHasAce = hasAce;
     }
 
-    gameOver = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
-    if (gameOver) {
-      return this.setState({ gameOver, dealerTotal, dealerCards });
+    winner = checkIfGameOver(dealerTotal, playerTotal, playerStanding);
+    if (winner) {
+      return this.setState({ winner, dealerTotal, dealerCards });
     }
     this.setState({
       dealerTotal,
@@ -148,17 +148,7 @@ class GameBoard extends Component {
 
   //Reset the game back to it's initial state
   handlePlayAgain = () => {
-    this.setState({
-      playerCards: [],
-      dealerCards: [],
-      playerTotal: 0,
-      dealerTotal: 0,
-      playerHasAce: false,
-      dealerHasAce: false,
-      playerStanding: false,
-      winner: "",
-      gameOver: "",
-    });
+    this.setState(INITIAL_GAME_STATE);
     resetCardsDrawn();
   };
 
@@ -168,23 +158,23 @@ class GameBoard extends Component {
       dealerCards,
       playerTotal,
       dealerTotal,
-      gameOver,
+      winner,
     } = this.state;
 
     return (
       <div className="game-board">
         <ToastContainer />
-        <GameHeader gameOver={gameOver} />
+        <GameHeader winner={winner} />
         <Player
           cards={dealerCards}
           total={dealerTotal}
-          gameOver={gameOver}
+          winner={winner}
           owner="Dealer"
         />
         <Player
           cards={playerCards}
           total={playerTotal}
-          gameOver={gameOver}
+          winner={winner}
           owner="Player"
         />
         <GameControls
@@ -192,7 +182,7 @@ class GameBoard extends Component {
           onStand={this.handlePlayerStand}
           onPlayAgain={this.handlePlayAgain}
           cardCount={dealerCards.length}
-          gameOver={gameOver}
+          winner={winner}
         />
       </div>
     );

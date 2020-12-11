@@ -1,7 +1,7 @@
 import React from "react";
 import "./gameControls.css";
 
-const GameControls = ({ onGet, onStand, onPlayAgain, cardCount, gameOver }) => {
+const GameControls = ({ onGet, onStand, onPlayAgain, cardCount, winner }) => {
   let controlsToRender = (
     <div>
       <button className="btn btn-success m-2" onClick={() => onGet()}>
@@ -13,7 +13,7 @@ const GameControls = ({ onGet, onStand, onPlayAgain, cardCount, gameOver }) => {
     </div>
   );
 
-  if (gameOver !== "") {
+  if (winner !== "") {
     controlsToRender = (
       <button className="btn btn-success m-2" onClick={() => onPlayAgain()}>
         Play Again

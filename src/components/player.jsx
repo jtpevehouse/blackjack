@@ -4,10 +4,10 @@ import "./player.css";
 
 class Player extends Component {
   render() {
-    const { cards, owner, total, gameOver } = this.props;
+    const { cards, owner, total, winner } = this.props;
 
     const playerHeader =
-      owner === "Dealer" && gameOver === "" ? owner : `${owner}: ${total}`;
+      owner === "Dealer" && winner === "" ? owner : `${owner}: ${total}`;
 
     return (
       <div className="player">
@@ -18,7 +18,7 @@ class Player extends Component {
               key={card.index}
               data={card}
               owner={owner}
-              gameOver={gameOver}
+              winner={winner}
               indexInHand={indexInHand}
               totalCardCount={cards.length}
             />
