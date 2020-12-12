@@ -40,9 +40,11 @@ class GameBoard extends Component {
       progress: undefined,
     };
 
-    if (winner !== "" && winner !== "draw") {
-      toast.info(`${winner} won!`, toastProps);
-    } else if (winner !== "" && winner === "draw") {
+    if (winner === "Player" ) {
+      toast.success(`Congratulations, you won!`, toastProps);
+    } else if (winner === "Dealer"){
+      toast.error(`The dealer won!`, toastProps);
+    }else if ( winner === "draw") {
       toast.info("It was a draw!", toastProps);
     }
   }
