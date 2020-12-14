@@ -5,6 +5,7 @@ This is a React.js application that plays a game of blackjack
 ## Required technologies to run:
 
 - Node.js v10.23.0 or later
+- yarn v1.22.5
 
 ## To run:
 
