@@ -11,10 +11,10 @@ export function checkIfGameOver(dealerTotal, playerTotal, playerStanding) {
     return "draw";
   }
 
-  //Check if either player has blackjack
-  if (dealerTotal === HARD_CAP) {
+  //Check if either player has won on blackjack
+  if (dealerTotal === HARD_CAP && (playerStanding || playerTotal > HARD_CAP)) {
     return "Dealer";
-  } else if (playerTotal === HARD_CAP) {
+  } else if (playerTotal === HARD_CAP && dealerTotal > DEALER_SOFT_CAP) {
     return "Player";
   }
 
