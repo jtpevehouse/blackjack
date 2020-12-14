@@ -2,12 +2,23 @@
 
 This is a React.js application that plays a game of blackjack
 
-## To run currently
+## Required technologies to run:
+
+- Node.js v10.23.0 or later
+
+## To run:
 
 Open Command Prompt or Terminal in the root folder of the project and run
 
 ```bash
-npm i
+yarn install
 
-npm start
+yarn start
 ```
+
+The app will be running on port 3000
+
+## Project Dependencies:
+
+- Bootstrap v4.5.3
+- React-Toastify v6.2.0
